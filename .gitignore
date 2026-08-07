@@ -1,0 +1,16 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/*
+!.vscode/settings.json
+
+# Environment variables
+.env
+
+# Sass source maps 
+*.css.map
+
+# Node 
+node_modules/

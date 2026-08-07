@@ -1,0 +1,19 @@
+// SCSS es un preprocesador de CSS: agrega funcionalidades
+// que CSS puro no tiene (variables, nesting, partials).
+// El navegador no lee este archivo, Live Sass Compiler lo
+// transforma en un .css que sí puede interpretar.
+
+// Este es el archivo de entrada: no tiene estilos propios,
+// solo importa las capas en orden (config → base → componentes).
+// El orden importa porque los componentes usan las variables.
+
+// @use "nombre" sin guion bajo y sin extensión: el archivo en
+// el disco se llama "_variables.scss", pero Sass ya sabe que
+// es un partial (por el _) y que es .scss, así que se omiten.
+
+@use "variables";
+@use "base";
+@use "components/card";
+@use "components/modal";
+@use "components/pagination";
+@use "components/search";
