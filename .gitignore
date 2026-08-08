@@ -9,8 +9,8 @@ Thumbs.db
 # Environment variables
 .env
 
-# Sass source maps 
+# Sass source maps
 *.css.map
 
-# Node 
+# Node
 node_modules/
