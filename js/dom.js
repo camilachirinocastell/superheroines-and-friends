@@ -8,9 +8,14 @@
 // todo lo que necesita (la lista de héroes) ya se lo pasan resuelto;
 // solo hace trabajo de manipular el DOM, que es instantáneo.
 
-export function renderHeroes(heroes) {
+export function renderCardGrid(heroes) {
   // Ubica el contenedor vacío que ya existe en el HTML.
   const container = document.getElementById("heroes-container");
+
+  // Limpia lo que había antes de pintar de nuevo — necesario porque
+  // esta función se va a llamar repetidas veces (cada tecla del buscador),
+  // no solo una vez como en la Fase 2.
+  container.innerHTML = "";
 
   // Por cada héroe de la lista, crea y agrega su card.
   heroes.forEach((hero) => {
