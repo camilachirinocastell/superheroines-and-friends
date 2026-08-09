@@ -37,3 +37,24 @@ export function renderCardGrid(heroes) {
     container.appendChild(card);
   });
 }
+
+// Función para paginación:
+// Actualiza el texto "Page X of Y" y habilita/deshabilita los 4 botones
+// según si la página actual es la primera y/o la última.
+export function updatePaginationControls(currentPage, totalPages) {
+  const pageInfo = document.getElementById("page-info");
+  const firstBtn = document.getElementById("first-page-btn");
+  const prevBtn = document.getElementById("prev-page-btn");
+  const nextBtn = document.getElementById("next-page-btn");
+  const lastBtn = document.getElementById("last-page-btn");
+
+  pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+
+  const isFirstPage = currentPage === 1;
+  const isLastPage = currentPage === totalPages;
+
+  firstBtn.disabled = isFirstPage;
+  prevBtn.disabled = isFirstPage;
+  nextBtn.disabled = isLastPage;
+  lastBtn.disabled = isLastPage;
+}
