@@ -1,0 +1,62 @@
+#modal-overlay {
+  // display: none por defecto — el estado "cerrado" real, sin depender
+  // únicamente de la clase .hidden.
+  display: none;
+
+  // position: fixed lo saca del flujo normal del documento y lo ancla
+  // a la ventana del navegador (no a su posición original en el HTML),
+  // por eso hasta ahora aparecía "abajo del todo": estaba en flujo normal.
+  position: fixed;
+
+  // Atajo equivalente a top: 0; right: 0; bottom: 0; left: 0 — hace que
+  // ocupe el 100% de la pantalla en las 4 direcciones.
+  inset: 0;
+
+  // Fondo oscuro semi-transparente (el "overlay" que tapa el resto).
+  background: rgba(0, 0, 0, 0.6);
+
+  // Encima de cualquier otro elemento de la página (cards, botones).
+  z-index: 1000;
+
+  // Centra el contenido de adentro (el modal) tanto horizontal como
+  // verticalmente, PERO solo cuando el overlay esté visible — con
+  // display: none, estas dos líneas no tienen ningún efecto.
+  align-items: center;
+  justify-content: center;
+
+  // Truco de especificidad: en vez de tocar la clase .hidden genérica
+  // de _base.scss, se usa :not(.hidden) acá mismo. Como un selector de
+  // ID (#modal-overlay) le gana en especificidad a una clase sola
+  // (.hidden), si hubiera puesto "display: flex" directo en la regla de
+  // arriba, ganaría siempre sobre .hidden y el modal jamás se escondería.
+  &:not(.hidden) {
+    display: flex;
+  }
+}
+
+#modal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 600px;
+  width: 90%;
+
+  // Si el contenido es más alto que la pantalla (biografías largas),
+  // en vez de desbordar, aparece scroll solo dentro del modal.
+  max-height: 85vh;
+  overflow-y: auto;
+
+  // Ancla de referencia para el botón de cerrar, que se va a posicionar
+  // "absolute" relativo a ESTE contenedor, no a toda la pantalla.
+  position: relative;
+}
+
+#modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}

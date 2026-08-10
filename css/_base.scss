@@ -1,0 +1,5 @@
+// Utilidad genérica para esconder cualquier elemento. La usa el modal,
+// pero no es exclusiva de él — por eso vive acá y no en _modal.scss.
+.hidden {
+  display: none;
+}

@@ -25,6 +25,11 @@ export function renderCardGrid(heroes) {
     // Le agrega una clase CSS, para poder darle estilos después en SCSS.
     card.classList.add("hero-card");
 
+    // Guarda el id del héroe directamente en el HTML de la card, como un
+    // atributo data-*. Esto es lo que va a permitir, más adelante, saber
+    // a qué héroe corresponde una card cuando alguien le hace clic.
+    card.dataset.id = hero.id;
+
     // Arma el contenido interno de la card con los datos de este héroe.
     card.innerHTML = `
   <img src="${hero.images.md}" alt="${hero.name}">
@@ -57,4 +62,51 @@ export function updatePaginationControls(currentPage, totalPages) {
   prevBtn.disabled = isFirstPage;
   nextBtn.disabled = isLastPage;
   lastBtn.disabled = isLastPage;
+}
+
+// Llena el modal con la info de UN héroe puntual y lo muestra.
+// Recibe el objeto héroe completo (no un id, no un array) — ya resuelto,
+// mismo criterio que renderCardGrid: esta función solo pinta, no busca.
+export function openModal(hero) {
+  const modalContent = document.getElementById("modal-content");
+  const modalOverlay = document.getElementById("modal-overlay");
+
+  // biography.aliases llega como array (ej: ["Bruce Wayne", "Insider"]).
+  // .join(", ") lo convierte en un solo string legible para mostrarlo.
+  const aliases = hero.biography.aliases.join(", ");
+
+  // appearance.height y appearance.weight son arrays de 2 valores cada
+  // uno: [imperial, métrico] (ej: ["6'2", "188 cm"]). Se usa la posición
+  // [1] para mostrar el valor métrico.
+  const height = hero.appearance.height[1];
+  const weight = hero.appearance.weight[1];
+
+  modalContent.innerHTML = `
+    <img src="${hero.images.lg}" alt="${hero.name}">
+    <h2>${hero.name}</h2>
+    <p><strong>Real name:</strong> ${hero.biography.fullName}</p>
+    <p><strong>Publisher:</strong> ${hero.biography.publisher}</p>
+    <p><strong>Aliases:</strong> ${aliases}</p>
+    <p><strong>Place of birth:</strong> ${hero.biography.placeOfBirth}</p>
+    <p><strong>Occupation:</strong> ${hero.work.occupation}</p>
+    <p><strong>Height:</strong> ${height} — <strong>Weight:</strong> ${weight}</p>
+    <p><strong>Group affiliation:</strong> ${hero.connections.groupAffiliation}</p>
+    <h3>Power stats</h3>
+    <ul>
+      <li>Intelligence: ${hero.powerstats.intelligence}</li>
+      <li>Strength: ${hero.powerstats.strength}</li>
+      <li>Speed: ${hero.powerstats.speed}</li>
+      <li>Durability: ${hero.powerstats.durability}</li>
+      <li>Power: ${hero.powerstats.power}</li>
+      <li>Combat: ${hero.powerstats.combat}</li>
+    </ul>
+  `;
+
+  // Le saca la clase "hidden" al overlay — recién ahí se vuelve visible.
+  modalOverlay.classList.remove("hidden");
+}
+
+// Vuelve a esconder el modal. No recibe ningún dato — solo esconde.
+export function closeModal() {
+  document.getElementById("modal-overlay").classList.add("hidden");
 }
