@@ -9,3 +9,17 @@ export function applySuperheroinesFilter(heroes, onlyFemales) {
   if (!onlyFemales) return heroes;
   return heroes.filter((hero) => hero.appearance.gender === "Female");
 }
+
+// Filtra por editorial. "all" es un valor especial que significa
+// "no filtrar nada" — no es un publisher real de la API, es una
+// convención propia para representar "sin filtro" en el <select>.
+export function applyPublisherFilter(heroes, publisher) {
+  if (publisher === "all") return heroes;
+  return heroes.filter((hero) => hero.biography.publisher === publisher);
+}
+
+// Mismo patrón exacto, para alineación (good/bad/neutral).
+export function applyAlignmentFilter(heroes, alignment) {
+  if (alignment === "all") return heroes;
+  return heroes.filter((hero) => hero.biography.alignment === alignment);
+}

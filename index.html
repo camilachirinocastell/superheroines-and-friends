@@ -26,6 +26,9 @@
     <h1>Superheroines & Friends</h1>
 
     <main>
+      <!-- Todos los controles que afectan QUÉ se ve en la grilla (búsqueda,
+           filtros, orden) viven juntos acá arriba, separados del resultado
+           en sí (#heroes-container, más abajo). -->
       <section class="search-section">
         <input
           type="search"
@@ -33,6 +36,10 @@
           placeholder="Search heroes by name..."
         />
 
+        <!-- checked va a mano acá porque tiene que coincidir con el estado
+             inicial declarado en JS (onlyFemales = true) — si no
+             coincidieran, la pantalla mostraría algo distinto de lo que el
+             estado real dice. -->
         <label class="toggle-label">
           <input type="checkbox" id="gender-toggle" checked />
           Superheroines first
@@ -43,25 +50,59 @@
           <option value="az">A-Z</option>
           <option value="za">Z-A</option>
         </select>
+
+        <!-- Arranca con una sola opción ("all"). El resto de las <option>
+             (una por cada editorial real que aparezca en los datos) las
+             agrega dinámicamente populatePublisherOptions() en dom.js,
+             apenas llegan los héroes desde la API — no se escriben a mano
+             porque no sabemos de antemano cuántas editoriales hay. -->
+        <select id="publisher-select">
+          <option value="all">All publishers</option>
+        </select>
+
+        <!-- A diferencia del de editorial, este sí se escribe a mano: la
+             alineación solo tiene 3 valores posibles y fijos en toda la
+             API (good / bad / neutral), no hace falta generarlos. -->
+        <select id="alignment-select">
+          <option value="all">All alignments</option>
+          <option value="good">😇 Good</option>
+          <option value="bad">😈 Bad</option>
+          <option value="neutral">😐 Neutral</option>
+        </select>
       </section>
 
+      <!-- Arranca vacío a propósito: es el molde que renderCardGrid() en
+           dom.js llena dinámicamente con una card por héroe. Nada de lo
+           que hay adentro se escribe a mano en este archivo. -->
       <div id="heroes-container"></div>
 
       <section class="pagination-controls">
         <button id="first-page-btn">First</button>
         <button id="prev-page-btn">Previous</button>
+        <!-- Texto de arranque provisorio ("Page 1 of 1"): JS lo
+             actualiza en cada render vía updatePaginationControls(). -->
         <span id="page-info">Page 1 of 1</span>
         <button id="next-page-btn">Next</button>
         <button id="last-page-btn">Last</button>
       </section>
     </main>
 
-  <div id="modal-overlay" class="hidden">
-    <div id="modal">
-      <button id="modal-close-btn" aria-label="Close">✕</button>
-      <div id="modal-content"></div>
+    <!-- El modal vive fuera de <main> a propósito: no es "contenido
+         principal" de la página, es una capa que se superpone a todo. -->
+    <!-- class="hidden" es el estado inicial "cerrado" (ver .hidden en
+         _base.scss). openModal()/closeModal() en dom.js agregan y sacan
+         esta clase para mostrar u ocultar el modal. -->
+    <div id="modal-overlay" class="hidden">
+      <!-- #modal-overlay y #modal son dos elementos distintos: el overlay
+           es el fondo oscuro que cubre toda la pantalla; #modal es la
+           "tarjeta" blanca centrada con el contenido, adentro del overlay. -->
+      <div id="modal">
+        <button id="modal-close-btn" aria-label="Close">✕</button>
+        <!-- Arranca vacío: openModal() lo llena con el innerHTML del
+             héroe seleccionado en cada clic. -->
+        <div id="modal-content"></div>
+      </div>
     </div>
-  </div>
 
     <script type="module" src="js/main.js"></script>
   </body>
