@@ -4,9 +4,9 @@
 // página actual).
 
 import { fetchAllHeroes } from "./api.js";
-import { renderCardGrid, updatePaginationControls, openModal, closeModal } from "./dom.js";
+import { renderCardGrid, updatePaginationControls, openModal, closeModal, populatePublisherOptions } from "./dom.js";
 import { filterHeroesByName } from "./search.js";
-import { applySuperheroinesFilter } from "./filters.js";
+import { applySuperheroinesFilter, applyPublisherFilter, applyAlignmentFilter } from "./filters.js";
 import { sortAlphabetically } from "./sortHeroes.js";
 import { getTotalPages, getPageSlice } from "./pagination.js";
 import { debounce } from "./utils.js";
@@ -15,6 +15,8 @@ import { debounce } from "./utils.js";
 const searchInput = document.getElementById("search-input");
 const genderToggle = document.getElementById("gender-toggle");
 const sortSelect = document.getElementById("sort-select");
+const publisherSelect = document.getElementById("publisher-select");
+const alignmentSelect = document.getElementById("alignment-select");
 const firstBtn = document.getElementById("first-page-btn");
 const prevBtn = document.getElementById("prev-page-btn");
 const nextBtn = document.getElementById("next-page-btn");
@@ -25,6 +27,8 @@ let allHeroes = [];
 let searchText = "";
 let onlyFemales = true;
 let sortDirection = "none";
+let publisherFilter = "all";
+let alignmentFilter = "all";
 let currentPage = 1;
 
 /****************** CÁLCULO DE LA VISTA ********************/
@@ -35,6 +39,8 @@ let currentPage = 1;
 function getVisibleHeroes() {
   let visibleHeroes = filterHeroesByName(allHeroes, searchText);
   visibleHeroes = applySuperheroinesFilter(visibleHeroes, onlyFemales);
+  visibleHeroes = applyPublisherFilter(visibleHeroes, publisherFilter);
+  visibleHeroes = applyAlignmentFilter(visibleHeroes, alignmentFilter);
 
   if (sortDirection !== "none") {
     visibleHeroes = sortAlphabetically(visibleHeroes, sortDirection);
@@ -75,6 +81,19 @@ genderToggle.addEventListener("change", (event) => {
 sortSelect.addEventListener("change", (event) => {
   sortDirection = event.target.value;
   currentPage = 1; // reset, por consistencia con el resto de los controles
+  updateView();
+});
+
+// Mismo patrón que sortSelect: actualiza el estado y resetea la página.
+publisherSelect.addEventListener("change", (event) => {
+  publisherFilter = event.target.value;
+  currentPage = 1;
+  updateView();
+});
+
+alignmentSelect.addEventListener("change", (event) => {
+  alignmentFilter = event.target.value;
+  currentPage = 1;
   updateView();
 });
 
@@ -159,9 +178,10 @@ document.addEventListener("keydown", (event) => {
 
 /****************** INICIO ********************/
 
+initApp();
+
 async function initApp() {
   allHeroes = await fetchAllHeroes();
-  updateView(); // primer render — ya sale con el filtro de género aplicado
+  populatePublisherOptions(allHeroes); // llena el select apenas llegan los datos
+  updateView();// primer render — ya sale con el filtro de género aplicado
 }
-
-initApp();

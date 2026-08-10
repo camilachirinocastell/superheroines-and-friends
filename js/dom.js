@@ -110,3 +110,34 @@ export function openModal(hero) {
 export function closeModal() {
   document.getElementById("modal-overlay").classList.add("hidden");
 }
+
+// Recorre TODOS los héroes (la lista completa, no la filtrada) para
+// armar el listado de editoriales posibles, y genera las <option> del
+// <select> de editorial dinámicamente — no se escriben a mano porque
+// no se sabe de antemano cuántas editoriales distintas hay en los datos.
+export function populatePublisherOptions(heroes) {
+  const publisherSelect = document.getElementById("publisher-select");
+
+  // hero.biography.publisher, por cada héroe → array con muchos
+  // repetidos (ej: 200 veces "Marvel Comics"). new Set() elimina esos
+  // duplicados automáticamente: solo guarda cada valor distinto una vez.
+  const publishers = [...new Set(heroes.map((hero) => hero.biography.publisher))]
+    // Algunos héroes de los datos reales tienen publisher vacío o "-".
+    // .filter(Boolean) descarta esos valores "falsy" (vacío, null,
+    // undefined), para no mostrar una opción sin sentido en el select.
+    .filter(Boolean)
+    // Orden alfabético, para que el select sea fácil de recorrer con la
+    // vista — sin esto, el orden dependería de en qué posición del
+    // array apareció cada editorial por primera vez.
+    .sort();
+
+  // Por cada editorial ya única y ordenada, crea su <option> real y la
+  // cuelga del <select> — mismo patrón createElement + appendChild que
+  // ya usaste para las cards en renderCardGrid.
+  publishers.forEach((publisher) => {
+    const option = document.createElement("option");
+    option.value = publisher;
+    option.textContent = publisher;
+    publisherSelect.appendChild(option);
+  });
+}
