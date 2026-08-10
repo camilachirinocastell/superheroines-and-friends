@@ -4,7 +4,7 @@
 // página actual).
 
 import { fetchAllHeroes } from "./api.js";
-import { renderCardGrid, updatePaginationControls } from "./dom.js";
+import { renderCardGrid, updatePaginationControls, openModal, closeModal } from "./dom.js";
 import { filterHeroesByName } from "./search.js";
 import { applySuperheroinesFilter } from "./filters.js";
 import { sortAlphabetically } from "./sortHeroes.js";
@@ -63,7 +63,7 @@ searchInput.addEventListener(
     searchText = event.target.value;
     currentPage = 1; // reset: cambió qué se muestra
     updateView();
-  }, 300)
+  }, 300),
 );
 
 genderToggle.addEventListener("change", (event) => {
@@ -97,6 +97,65 @@ lastBtn.addEventListener("click", () => {
   currentPage = getTotalPages(getVisibleHeroes());
   updateView();
 });
+
+const heroesContainer = document.getElementById("heroes-container");
+
+heroesContainer.addEventListener("click", (event) => {
+  // event.target es el elemento EXACTO donde cayó el clic (puede ser la
+  // imagen, el <h3>, cualquier cosa adentro de la card). .closest(".hero-card")
+  // sube por los padres hasta encontrar la card completa que lo contiene.
+  const card = event.target.closest(".hero-card");
+
+  // Si el clic fue en el contenedor pero fuera de cualquier card
+  // (un espacio vacío), card va a ser null — no hay nada que abrir.
+  if (!card) return;
+
+  // dataset.id siempre llega como string, aunque hero.id sea number —
+  // Number(...) lo convierte de vuelta para que la comparación de abajo
+  // funcione correctamente.
+  const heroId = Number(card.dataset.id);
+
+  // Busca, en la lista completa guardada en memoria, el héroe con ese id.
+  const hero = allHeroes.find((h) => h.id === heroId);
+
+  if (hero) {
+    openModal(hero);
+  }
+});
+
+// Busca el botón X del modal para poder escucharle el clic.
+const modalCloseBtn = document.getElementById("modal-close-btn");
+
+// Al hacer clic en la X, solo esconde el modal — no toca nada del
+// estado de la app (búsqueda, filtros, página), porque cerrar el modal
+// no debería afectar en absoluto lo que se está viendo en la grilla de atrás.
+modalCloseBtn.addEventListener("click", () => {
+  closeModal();
+});
+
+// Busca el fondo oscuro del modal.
+const modalOverlay = document.getElementById("modal-overlay");
+
+modalOverlay.addEventListener("click", (event) => {
+  // event.target es el elemento EXACTO donde cayó el clic. Si es el
+  // overlay mismo (el fondo), cierra. Si es cualquier hijo de adentro
+  // (el modal, sus textos), NO cierra — evita que clickear dentro del
+  // modal lo cierre por accidente, aunque el evento burbujee hasta acá.
+  if (event.target === modalOverlay) {
+    closeModal();
+  }
+});
+
+// Escucha cualquier tecla presionada en toda la página.
+document.addEventListener("keydown", (event) => {
+  // key === "Escape" es el nombre exacto que usa el navegador para esa
+  // tecla. closeModal() es seguro llamarla aunque el modal ya esté
+  // cerrado — solo vuelve a agregar la clase "hidden", que ya estaba puesta.
+  if (event.key === "Escape") {
+    closeModal();
+  }
+});
+
 
 /****************** INICIO ********************/
 
