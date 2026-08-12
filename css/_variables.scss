@@ -1,0 +1,10 @@
+// Paleta semilla de la estética Y2K/glossy — colores núcleo definidos
+// ahora porque el loader y el cursor los necesitan ya. El sistema de
+// diseño completo (tipografía, spacing, el resto de la paleta) se
+// termina de definir en el pase de estética final de la Fase 8.
+$pink-primary: #ff3ea5;
+$pink-light: #ffb6d9;
+$silver: #d9d9e3;
+$white-glossy: #ffffff;
+
+$gradient-glossy: linear-gradient(135deg, $pink-primary, $pink-light);

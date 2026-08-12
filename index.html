@@ -71,6 +71,12 @@
         </select>
       </section>
 
+      <div id="loader" class="loader">
+        <!-- Visible por defecto: no tiene la clase "hidden" porque al cargar
+       la página los datos todavía no existen. -->
+        <div class="diamond-spinner"></div>
+      </div>
+
       <!-- Arranca vacío a propósito: es el molde que renderCardGrid() en
            dom.js llena dinámicamente con una card por héroe. Nada de lo
            que hay adentro se escribe a mano en este archivo. -->

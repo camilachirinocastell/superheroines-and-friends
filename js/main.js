@@ -4,7 +4,7 @@
 // página actual).
 
 import { fetchAllHeroes } from "./api.js";
-import { renderCardGrid, updatePaginationControls, openModal, closeModal, populatePublisherOptions } from "./dom.js";
+import { renderCardGrid, updatePaginationControls, openModal, closeModal, populatePublisherOptions, renderErrorState, renderEmptyState } from "./dom.js";
 import { filterHeroesByName } from "./search.js";
 import { applySuperheroinesFilter, applyPublisherFilter, applyAlignmentFilter } from "./filters.js";
 import { sortAlphabetically } from "./sortHeroes.js";
@@ -56,7 +56,17 @@ function updateView() {
   const totalPages = getTotalPages(visibleHeroes);
   const pageOfHeroes = getPageSlice(visibleHeroes, currentPage);
 
-  renderCardGrid(pageOfHeroes);
+  // Si el recorte de esta página quedó vacío, no tiene sentido llamar a
+  // renderCardGrid() con un array vacío (pintaría el contenedor en blanco
+  // sin ninguna explicación) — se muestra el mensaje de "sin resultados"
+  // en su lugar. Caso distinto de renderErrorState(): acá nada se rompió,
+  // simplemente no hay héroes que cumplan la búsqueda/filtros actuales.
+  if (pageOfHeroes.length === 0) {
+    renderEmptyState();
+  } else {
+    renderCardGrid(pageOfHeroes);
+  }
+
   updatePaginationControls(currentPage, totalPages);
 }
 
@@ -178,10 +188,36 @@ document.addEventListener("keydown", (event) => {
 
 /****************** INICIO ********************/
 
-initApp();
-
 async function initApp() {
-  allHeroes = await fetchAllHeroes();
-  populatePublisherOptions(allHeroes); // llena el select apenas llegan los datos
-  updateView();// primer render — ya sale con el filtro de género aplicado
+  const loader = document.getElementById("loader");
+
+  // Promise que se resuelve sola, sin hacer nada, después de 3000ms —
+  // no pide ningún dato, solo sirve como "reloj" en paralelo al fetch real.
+  const minLoadingTime = new Promise((resolve) => setTimeout(resolve, 3000));
+
+  try {
+    // Promise.all dispara las dos promesas A LA VEZ y espera a que las DOS
+    // terminen — no a que termine la primera. Si el fetch tarda 400ms, se
+    // sigue esperando hasta completar los 3000ms del timer. Si el fetch
+    // tardara 4000ms (más que el mínimo), no se agrega ninguna espera
+    // extra — ya superó el piso de 3 segundos por su cuenta.
+    const [heroes] = await Promise.all([fetchAllHeroes(), minLoadingTime]);
+
+    allHeroes = heroes;
+
+    // Recién ahora, con los dos tiempos cumplidos, se esconde el loader.
+    loader.classList.add("hidden");
+
+    populatePublisherOptions(allHeroes);// llena el select apenas llegan los datos
+    updateView();// primer render — ya sale con el filtro de género aplicado
+  } catch (error) {
+    // Si el fetch falla, el loader también tiene que esconderse acá —
+    // por este camino nunca llegamos a la línea de arriba que lo hacía.
+    loader.classList.add("hidden");
+    renderErrorState(error);
+  }
 }
+
+// Se llama al final a propósito: para acá ya están registrados todos los
+// listeners de arriba. Esta línea dispara el fetch inicial y el primer render.
+initApp();

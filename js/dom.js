@@ -141,3 +141,28 @@ export function populatePublisherOptions(heroes) {
     publisherSelect.appendChild(option);
   });
 }
+
+// Muestra un mensaje de error cuando falla el fetch a la API — caso
+// distinto al de "sin resultados": acá algo se rompió de verdad, no es
+// que la búsqueda no encontró coincidencias.
+export function renderErrorState(error) {
+  const container = document.getElementById("heroes-container");
+  container.innerHTML = `
+    <p class="error-state">
+      Something went wrong loading heroes. Please try again later.
+    </p>
+  `;
+  console.error(error);
+}
+
+// Muestra un mensaje cuando la búsqueda/filtros no encuentran ningún
+// resultado — caso distinto de renderErrorState: acá no se rompió nada,
+// simplemente no hay héroes que cumplan con lo que se pidió.
+export function renderEmptyState() {
+  const container = document.getElementById("heroes-container");
+  container.innerHTML = `
+    <p class="empty-state">
+      No heroines (or friends) match that search. Try a different name or combination of filters.
+    </p>
+  `;
+}

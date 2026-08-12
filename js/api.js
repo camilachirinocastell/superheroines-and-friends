@@ -13,6 +13,13 @@ export async function fetchAllHeroes() {
   // no hace falta "barrer" letra por letra como con la otra.
   const response = await fetch(API_URL);
 
+  // fetch() NO rechaza la promesa por errores HTTP (404, 500) — solo por
+  // fallas de red. response.ok es la forma de detectar esos casos y
+  // convertirlos en un error real que sí pueda atraparse más arriba.
+  if (!response.ok) {
+    throw new Error(`La API respondió con estado ${response.status}`);
+  }
+
   // Convierte la respuesta cruda a un array de objetos JS.
   const heroes = await response.json();
 

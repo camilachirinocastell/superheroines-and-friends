@@ -1,5 +1,64 @@
+@use "variables" as *;
+
 // Utilidad genérica para esconder cualquier elemento. La usa el modal,
 // pero no es exclusiva de él — por eso vive acá y no en _modal.scss.
 .hidden {
   display: none;
+}
+
+// Patrón de loader adaptado de una técnica común de CSS (diamante
+// rotado + pseudo-elemento de brillo pulsante) — no es una técnica que
+// haya diseñado desde cero, pero sí ajustada al proyecto (colores de
+// la paleta Y2K, timing de las animaciones).
+.loader {
+  // display: none por defecto — mismo patrón que #modal-overlay en la
+  // Fase 6, para no depender del orden de las reglas en el archivo.
+  display: none;
+
+  &:not(.hidden) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 0;
+  }
+}
+
+.diamond-spinner {
+  width: 40px;
+  height: 40px;
+  background: $gradient-glossy;
+  transform: rotate(45deg);
+  animation: spin 1.2s linear infinite;
+  position: relative;
+}
+
+.diamond-spinner::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  background: $silver;
+  border-radius: 4px;
+  z-index: -1;
+  animation: pulse-glow 1.2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  // Se suma 360° a los 45° iniciales (no se reinicia a 0), para que la
+  // animación complete una vuelta completa partiendo del ángulo con el
+  // que el diamante ya arranca rotado.
+  to {
+    transform: rotate(405deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
 }
