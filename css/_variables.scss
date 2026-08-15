@@ -1,3 +1,11 @@
+// _variables.scss
+// Responsabilidad única de este archivo: centralizar los valores de diseño
+// (colores, degradés, sombras, bordes) que se repiten en toda la app.
+// Ningún otro archivo debería escribir un color "a mano" — todos importan
+// las variables de acá, así que cambiar la paleta completa implica tocar
+// un solo lugar, no salir a buscar cada color hardcodeado componente por
+// componente.
+
 // Paleta semilla de la estética Y2K/glossy — colores núcleo definidos
 // ahora porque el loader y el cursor los necesitan ya. El sistema de
 // diseño completo (tipografía, spacing, el resto de la paleta) se
@@ -8,3 +16,24 @@ $silver: #d9d9e3;
 $white-glossy: #ffffff;
 
 $gradient-glossy: linear-gradient(135deg, $pink-primary, $pink-light);
+
+// Sumados para el pase de estética casino Y2K (Fase 11, feature/y2k-theme).
+// $pink-dark: mismo hue que $pink-primary pero oscurecido, para texto y
+// bordes que necesiten contraste legible sobre fondos claros/blancos —
+// $pink-primary solo, a full saturación, falla el contraste con texto chico.
+$pink-dark: darken($pink-primary, 20%);
+
+// Sombra con tinte rosa (no negro puro) — refuerza la sensación glossy:
+// las superficies "flotan" con un halo de color, no una sombra gris genérica.
+$shadow-glossy: rgba($pink-primary, 0.25);
+
+// Borde metálico sutil para simular el canto plateado/cromado de una
+// ficha o carta de casino — se usa en cards y botones.
+$border-chrome: linear-gradient(135deg, $silver, $white-glossy, $silver);
+
+// Tipografía Y2K: Baloo 2 para títulos (nombres de héroes, headings) —
+// más personalidad, onda "burbuja/casino". Quicksand para texto largo
+// (biografías del modal) — Baloo 2 a full peso se vuelve difícil de
+// leer en párrafos, por eso se separan los dos roles.
+$font-heading: 'Baloo 2', sans-serif;
+$font-body: 'Quicksand', sans-serif;
