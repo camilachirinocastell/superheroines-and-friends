@@ -1,0 +1,48 @@
+// _pagination.scss
+// Estiliza los 4 botones de paginado + el texto "Page X of Y".
+
+@use "../variables" as *;
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 0;
+  font-family: $font-body;
+}
+
+.pagination-controls button {
+  font-family: $font-heading;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  color: $white-glossy;
+  background: $gradient-glossy;
+  box-shadow: 0 2px 8px $shadow-glossy;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba($pink-primary, 0.4);
+  }
+
+  // El estado disabled ya existe en la lógica (updatePaginationControls
+  // pone/saca el atributo disabled) — acá solo se le da la piel visual
+  // que le faltaba: gris, sin sombra ni hover, cursor que comunica que
+  // no se puede clickear.
+  &:disabled {
+    background: $silver;
+    color: rgba($pink-dark, 0.5);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+#page-info {
+  color: $pink-dark;
+  font-weight: 600;
+}

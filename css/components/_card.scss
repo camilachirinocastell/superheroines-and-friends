@@ -1,0 +1,66 @@
+// _card.scss
+// Estética de "ficha de casino": borde metálico rodeando toda la card,
+// superficie glossy con degradé sutil, sombra con tinte rosa (no negra),
+// y un efecto hover que simula la ficha "levantándose" de la mesa.
+
+@use "../variables" as *;
+
+.hero-card {
+  cursor: pointer;
+  border-radius: 16px;
+  overflow: hidden; // recorta la imagen a las esquinas redondeadas del padre
+
+  // Truco de "borde con degradé + esquinas redondeadas": border-image
+  // (la opción obvia para un borde con gradiente) ignora border-radius,
+  // así que no sirve acá. La alternativa es esta técnica de dos fondos
+  // superpuestos: un borde transparente le hace lugar a un segundo
+  // background, y background-clip decide qué capa se pinta en la zona
+  // del borde (border-box, el degradé cromado) y cuál en el resto
+  // (padding-box, el degradé glossy) — no es una idea propia, es un
+  // patrón conocido para lograr "gradient border" respetando radius.
+  border: 3px solid transparent;
+  background:
+    linear-gradient(160deg, $white-glossy 0%, rgba($pink-light, 0.25) 100%) padding-box,
+    $border-chrome border-box;
+
+  box-shadow: 0 4px 12px $shadow-glossy;
+
+  // transform y box-shadow son las dos propiedades que cambian en hover,
+  // así que son las únicas que se animan — transition: all es más simple
+  // de escribir pero también anima propiedades que no lo necesitan.
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    // La ficha "se levanta" de la mesa: sube un poco y su sombra se
+    // agranda y oscurece levemente, como si se alejara de la superficie.
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba($pink-primary, 0.35);
+  }
+
+  img {
+    width: 100%;
+    aspect-ratio: 3 / 4; // alto y ancho fijos, para que la grilla no salte
+                          // de tamaño mientras cargan las imágenes reales
+    object-fit: cover;
+    display: block; // saca el espacio fantasma que los <img> dejan abajo
+                     // por ser inline por defecto
+  }
+
+  h3 {
+    font-family: $font-heading;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: $pink-dark; // no $pink-primary: a full saturación falla
+                        // contraste con texto chico sobre fondo claro
+    margin: 0.75rem 0.5rem 0.25rem;
+  }
+
+  p {
+    font-family: $font-body;
+    font-size: 0.85rem;
+    color: rgba($pink-dark, 0.7); // mismo hue que el título pero más
+                                   // suave, para marcar jerarquía sin
+                                   // introducir un color nuevo
+    margin: 0 0.5rem 0.75rem;
+  }
+}

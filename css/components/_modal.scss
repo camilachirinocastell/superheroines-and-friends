@@ -1,3 +1,7 @@
+// _modal.scss
+
+@use "../variables" as *;
+
 #modal-overlay {
   // display: none por defecto — el estado "cerrado" real, sin depender
   // únicamente de la clase .hidden.
@@ -35,8 +39,18 @@
 }
 
 #modal {
-  background: white;
-  border-radius: 12px;
+  // Mismo patrón de "borde con degradé + esquinas redondeadas" que en
+  // .hero-card: border transparent + dos fondos (padding-box para la
+  // superficie, border-box para el canto cromado). Se repite acá en vez
+  // de compartir una clase con la card porque el modal tiene su propio
+  // padding y radius — no vale la pena forzar una clase común por dos
+  // reglas de fondo.
+  border: 3px solid transparent;
+  background:
+    linear-gradient(160deg, $white-glossy 0%, rgba($pink-light, 0.2) 100%) padding-box,
+    $border-chrome border-box;
+
+  border-radius: 16px;
   padding: 2rem;
   max-width: 600px;
   width: 90%;
@@ -46,9 +60,29 @@
   max-height: 85vh;
   overflow-y: auto;
 
+  // Sombra rosa en vez de la genérica del navegador, mismo criterio
+  // que .hero-card: refuerza la sensación glossy en vez de una sombra
+  // gris que rompería la paleta.
+  box-shadow: 0 8px 24px $shadow-glossy;
+
   // Ancla de referencia para el botón de cerrar, que se va a posicionar
   // "absolute" relativo a ESTE contenedor, no a toda la pantalla.
   position: relative;
+
+  h2 {
+    font-family: $font-heading;
+    font-weight: 700;
+    color: $pink-dark;
+  }
+
+  p,
+  li {
+    font-family: $font-body;
+  }
+
+  strong {
+    color: $pink-dark;
+  }
 }
 
 #modal-close-btn {
@@ -59,4 +93,10 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
+  color: $pink-primary;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $pink-dark;
+  }
 }
