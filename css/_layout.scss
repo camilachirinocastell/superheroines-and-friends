@@ -1,0 +1,94 @@
+@use "variables" as *;
+
+// page-shell: contenedor de altura completa de la pantalla. flex column
+// para que header y footer queden fijos arriba/abajo, y layout-body
+// ocupe el espacio restante sin que la página entera necesite scroll.
+.page-shell {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header {
+  padding: 1.5rem 2rem 1rem;
+  text-align: center;
+
+  h1 {
+    color: $pink-primary;
+  }
+}
+
+.site-subtitle {
+  color: $silver;
+  font-style: italic;
+}
+
+// layout-body: fila horizontal, sidebar de filtros + área de resultados.
+// flex: 1 hace que ocupe todo el alto disponible entre header y footer.
+.layout-body {
+  flex: 1;
+  display: flex;
+  gap: 1.5rem;
+  padding: 0 2rem;
+  overflow: hidden; // el scroll, si hace falta, vive dentro de results-area
+  height: 100vh;
+}
+
+.filters-sidebar {
+  flex: 0 0 220px; // ancho fijo, no crece ni se achica
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: $gradient-glossy;
+  border-radius: 12px;
+  height: fit-content;
+}
+
+.results-area {
+  flex: 1; // ocupa todo el espacio que la sidebar no usa
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; // el único scroll interno de toda la página
+  min-height: 0; // para que el scroll quede contenido
+}
+
+.site-footer {
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: $silver;
+  border-top: 1px solid $pink-light;
+}
+
+.footer-links a {
+  color: $pink-primary;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// Responsive: en pantallas angostas la sidebar deja de ser una columna
+// lateral y pasa a ser una franja horizontal arriba de los resultados —
+// mismo contenido, disposición distinta según el espacio disponible.
+// Es el único breakpoint fijo del layout general; el grid de cards ya
+// se resuelve solo con auto-fit/minmax, sin necesitar uno propio.
+@media (max-width: 768px) {
+  .layout-body {
+    flex-direction: column;
+    padding: 0 1rem;
+    overflow: visible;
+  }
+
+  .filters-sidebar {
+    flex: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .results-area {
+    overflow: visible;
+  }
+}

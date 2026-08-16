@@ -18,15 +18,15 @@ const sortSelect = document.getElementById("sort-select");
 const publisherSelect = document.getElementById("publisher-select");
 const alignmentSelect = document.getElementById("alignment-select");
 
-const resultsArea = document.querySelector(".results-area");
+const filtersSidebar = document.querySelector(".filters-sidebar");
 
 // Delegación de eventos: un solo listener cubre los 4 botones de
-// paginación en los DOS bloques (arriba y abajo del grid) — mismo
-// patrón que ya usás en heroesContainer para las cards, en vez de 8
-// listeners individuales (uno por botón por bloque). El atributo
+// paginación, ubicados en la sidebar junto al resto de los controles
+// de "qué se ve" — mismo patrón que ya usás en heroesContainer para
+// las cards, en vez de 4 listeners individuales. El atributo
 // data-action del HTML dice qué acción corresponde, sin necesitar un
 // id único por botón.
-resultsArea.addEventListener("click", (event) => {
+filtersSidebar.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-action]");
   if (!button) return;
 

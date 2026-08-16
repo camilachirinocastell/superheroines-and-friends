@@ -31,7 +31,7 @@
   </head>
   <body>
     <!-- page-shell envuelve TODO lo que no es el modal: es el contenedor
-         que en base.scss se convierte en un flex de alto completo (100vh),
+         que en _layout.scss se convierte en un flex de alto fijo (100vh),
          para que header y footer queden siempre fijos y visibles, y el
          scroll (si hace falta) quede acotado adentro de #heroes-container,
          nunca en la página entera. -->
@@ -44,13 +44,12 @@
       <!-- layout-body es la fila horizontal: sidebar de filtros a la
            izquierda, área de resultados a la derecha. Separado del
            header/footer porque es la única franja que crece para llenar
-           el alto disponible (flex: 1 en base.scss). -->
+           el alto disponible (flex: 1 en _layout.scss). -->
       <div class="layout-body">
         <!-- Todos los controles que afectan QUÉ se ve en la grilla (búsqueda,
-             filtros, orden) viven juntos acá — antes eran una <section>
-             horizontal arriba del todo, ahora son la sidebar vertical.
-             aria-label porque un <aside> sin nombre accesible es ambiguo
-             para un lector de pantalla si hubiera más de uno en la página. -->
+             filtros, orden, paginación) viven juntos acá. aria-label porque
+             un <aside> sin nombre accesible es ambiguo para un lector de
+             pantalla si hubiera más de uno en la página. -->
         <aside class="filters-sidebar" aria-label="Filters">
           <input
             type="search"
@@ -96,32 +95,25 @@
             <option value="bad">😈 Bad</option>
             <option value="neutral">😐 Neutral</option>
           </select>
-        </aside>
 
-        <!-- results-area es el "cuadradito" de resultados: paginación
-             arriba, grid de cards en el medio, paginación abajo. La página
-             completa no scrollea — solo #heroes-container puede tener
-             scroll interno propio si en una pantalla chica no entran las
-             20 cards a la vez, para no perder de vista los filtros, la
-             paginación ni el footer. -->
-        <main class="results-area">
-          <!-- Estos botones usan CLASES, no ids, porque este bloque de
-               paginación se repite dos veces en la página (arriba y abajo
-               del grid). Con id="first-page-btn" duplicado, getElementById()
-               solo encuentra el primero que aparece en el HTML — el bloque
-               de abajo quedaría sin ningún listener enganchado. dom.js y
-               main.js necesitan actualizarse para buscar por clase con
-               querySelectorAll y actualizar ambos bloques a la vez. -->
-          <section class="pagination-controls" data-position="top">
+          <!-- Un único bloque de paginación, en la sidebar en vez de
+               repetido arriba y abajo del grid — menos espacio vertical
+               ocupado, y coherente con que el resto de los controles de
+               "qué se ve" también vive acá. -->
+          <section class="pagination-controls">
             <button class="first-page-btn" data-action="first">First</button>
             <button class="prev-page-btn" data-action="prev">Previous</button>
-            <!-- Texto de arranque provisorio ("Page 1 of 1"): JS lo
-                 actualiza en cada render vía updatePaginationControls(). -->
             <span class="page-info">Page 1 of 1</span>
             <button class="next-page-btn" data-action="next">Next</button>
             <button class="last-page-btn" data-action="last">Last</button>
           </section>
+        </aside>
 
+        <!-- results-area: solo el grid de cards. La página completa no
+             scrollea — solo #heroes-container tiene scroll interno propio
+             si no entran todas las cards a la vez, para no perder de vista
+             filtros, paginación, header ni footer. -->
+        <main class="results-area">
           <div id="loader" class="loader">
             <!-- Visible por defecto: no tiene la clase "hidden" porque al
                  cargar la página los datos todavía no existen. -->
@@ -132,14 +124,6 @@
                en dom.js llena dinámicamente con una card por héroe. Nada
                de lo que hay adentro se escribe a mano en este archivo. -->
           <div id="heroes-container"></div>
-
-          <section class="pagination-controls" data-position="bottom">
-            <button class="first-page-btn" data-action="first">First</button>
-            <button class="prev-page-btn" data-action="prev">Previous</button>
-            <span class="page-info">Page 1 of 1</span>
-            <button class="next-page-btn" data-action="next">Next</button>
-            <button class="last-page-btn" data-action="last">Last</button>
-          </section>
         </main>
       </div>
 

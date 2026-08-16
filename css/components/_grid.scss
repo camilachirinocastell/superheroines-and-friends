@@ -13,7 +13,7 @@
   // mobile), sin necesidad de fijar un número de columnas por breakpoint.
   // 220px es el mínimo por card antes de que el navegador prefiera bajar
   // a menos columnas en vez de achicarlas de más.
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1.5rem;
   padding: 1rem;
 }
