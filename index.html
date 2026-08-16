@@ -30,78 +30,142 @@
     <link rel="stylesheet" href="css/main.css" />
   </head>
   <body>
-    <h1>Superheroines & Friends</h1>
+    <!-- page-shell envuelve TODO lo que no es el modal: es el contenedor
+         que en base.scss se convierte en un flex de alto completo (100vh),
+         para que header y footer queden siempre fijos y visibles, y el
+         scroll (si hace falta) quede acotado adentro de #heroes-container,
+         nunca en la página entera. -->
+    <div class="page-shell">
+      <header class="site-header">
+        <h1>Superheroines & Friends</h1>
+        <p class="site-subtitle">Heroines first — every hero welcome.</p>
+      </header>
 
-    <main>
-      <!-- Todos los controles que afectan QUÉ se ve en la grilla (búsqueda,
-           filtros, orden) viven juntos acá arriba, separados del resultado
-           en sí (#heroes-container, más abajo). -->
-      <section class="search-section">
-        <input
-          type="search"
-          id="search-input"
-          placeholder="Search heroes by name..."
-        />
+      <!-- layout-body es la fila horizontal: sidebar de filtros a la
+           izquierda, área de resultados a la derecha. Separado del
+           header/footer porque es la única franja que crece para llenar
+           el alto disponible (flex: 1 en base.scss). -->
+      <div class="layout-body">
+        <!-- Todos los controles que afectan QUÉ se ve en la grilla (búsqueda,
+             filtros, orden) viven juntos acá — antes eran una <section>
+             horizontal arriba del todo, ahora son la sidebar vertical.
+             aria-label porque un <aside> sin nombre accesible es ambiguo
+             para un lector de pantalla si hubiera más de uno en la página. -->
+        <aside class="filters-sidebar" aria-label="Filters">
+          <input
+            type="search"
+            id="search-input"
+            placeholder="Search heroes by name..."
+          />
 
-        <!-- checked va a mano acá porque tiene que coincidir con el estado
-             inicial declarado en JS (onlyFemales = true) — si no
-             coincidieran, la pantalla mostraría algo distinto de lo que el
-             estado real dice. -->
-        <label class="toggle-label">
-          <input type="checkbox" id="gender-toggle" checked />
-          Superheroines first
-        </label>
+          <!-- checked va a mano acá porque tiene que coincidir con el estado
+               inicial declarado en JS (onlyFemales = true) — si no
+               coincidieran, la pantalla mostraría algo distinto de lo que el
+               estado real dice. -->
+          <label class="toggle-label">
+            <input type="checkbox" id="gender-toggle" checked />
+            Superheroines first
+          </label>
 
-        <select id="sort-select">
-          <option value="none">Default order</option>
-          <option value="az">A-Z</option>
-          <option value="za">Z-A</option>
-        </select>
+          <!-- translate="no": Chrome con la traducción automática activa
+               interpreta el texto "A-Z" como el código postal del estado
+               de Arizona (EE.UU.) y lo traduce a "Arizona" en pantalla —
+               este atributo excluye el select de esa traducción, sin
+               afectar la lógica de JS ni el valor real de la opción. -->
+          <select id="sort-select" translate="no">
+            <option value="none">Default order</option>
+            <option value="az">A-Z</option>
+            <option value="za">Z-A</option>
+          </select>
 
-        <!-- Arranca con una sola opción ("all"). El resto de las <option>
-             (una por cada editorial real que aparezca en los datos) las
-             agrega dinámicamente populatePublisherOptions() en dom.js,
-             apenas llegan los héroes desde la API — no se escriben a mano
-             porque no sabemos de antemano cuántas editoriales hay. -->
-        <select id="publisher-select">
-          <option value="all">All publishers</option>
-        </select>
+          <!-- Arranca con una sola opción ("all"). El resto de las <option>
+               (una por cada editorial real que aparezca en los datos) las
+               agrega dinámicamente populatePublisherOptions() en dom.js,
+               apenas llegan los héroes desde la API — no se escriben a mano
+               porque no sabemos de antemano cuántas editoriales hay. -->
+          <select id="publisher-select">
+            <option value="all">All publishers</option>
+          </select>
 
-        <!-- A diferencia del de editorial, este sí se escribe a mano: la
-             alineación solo tiene 3 valores posibles y fijos en toda la
-             API (good / bad / neutral), no hace falta generarlos. -->
-        <select id="alignment-select">
-          <option value="all">All alignments</option>
-          <option value="good">😇 Good</option>
-          <option value="bad">😈 Bad</option>
-          <option value="neutral">😐 Neutral</option>
-        </select>
-      </section>
+          <!-- A diferencia del de editorial, este sí se escribe a mano: la
+               alineación solo tiene 3 valores posibles y fijos en toda la
+               API (good / bad / neutral), no hace falta generarlos. -->
+          <select id="alignment-select">
+            <option value="all">All alignments</option>
+            <option value="good">😇 Good</option>
+            <option value="bad">😈 Bad</option>
+            <option value="neutral">😐 Neutral</option>
+          </select>
+        </aside>
 
-      <div id="loader" class="loader">
-        <!-- Visible por defecto: no tiene la clase "hidden" porque al cargar
-       la página los datos todavía no existen. -->
-        <div class="diamond-spinner"></div>
+        <!-- results-area es el "cuadradito" de resultados: paginación
+             arriba, grid de cards en el medio, paginación abajo. La página
+             completa no scrollea — solo #heroes-container puede tener
+             scroll interno propio si en una pantalla chica no entran las
+             20 cards a la vez, para no perder de vista los filtros, la
+             paginación ni el footer. -->
+        <main class="results-area">
+          <!-- Estos botones usan CLASES, no ids, porque este bloque de
+               paginación se repite dos veces en la página (arriba y abajo
+               del grid). Con id="first-page-btn" duplicado, getElementById()
+               solo encuentra el primero que aparece en el HTML — el bloque
+               de abajo quedaría sin ningún listener enganchado. dom.js y
+               main.js necesitan actualizarse para buscar por clase con
+               querySelectorAll y actualizar ambos bloques a la vez. -->
+          <section class="pagination-controls" data-position="top">
+            <button class="first-page-btn" data-action="first">First</button>
+            <button class="prev-page-btn" data-action="prev">Previous</button>
+            <!-- Texto de arranque provisorio ("Page 1 of 1"): JS lo
+                 actualiza en cada render vía updatePaginationControls(). -->
+            <span class="page-info">Page 1 of 1</span>
+            <button class="next-page-btn" data-action="next">Next</button>
+            <button class="last-page-btn" data-action="last">Last</button>
+          </section>
+
+          <div id="loader" class="loader">
+            <!-- Visible por defecto: no tiene la clase "hidden" porque al
+                 cargar la página los datos todavía no existen. -->
+            <div class="diamond-spinner"></div>
+          </div>
+
+          <!-- Arranca vacío a propósito: es el molde que renderCardGrid()
+               en dom.js llena dinámicamente con una card por héroe. Nada
+               de lo que hay adentro se escribe a mano en este archivo. -->
+          <div id="heroes-container"></div>
+
+          <section class="pagination-controls" data-position="bottom">
+            <button class="first-page-btn" data-action="first">First</button>
+            <button class="prev-page-btn" data-action="prev">Previous</button>
+            <span class="page-info">Page 1 of 1</span>
+            <button class="next-page-btn" data-action="next">Next</button>
+            <button class="last-page-btn" data-action="last">Last</button>
+          </section>
+        </main>
       </div>
 
-      <!-- Arranca vacío a propósito: es el molde que renderCardGrid() en
-           dom.js llena dinámicamente con una card por héroe. Nada de lo
-           que hay adentro se escribe a mano en este archivo. -->
-      <div id="heroes-container"></div>
+      <footer class="site-footer">
+        <p>
+          Designed &amp; built by Camila Chirino Castell — Full Stack
+          Developer · AI Engineering track
+        </p>
+        <p class="footer-skills">
+          Vanilla JS · REST API consumption · async/await · SCSS
+          architecture · Git flow with feature branches &amp; PRs · UX
+          decisions for representation
+        </p>
+        <p class="footer-links">
+          <a href="https://camilachirinocastell-portfolio.netlify.app" target="_blank" rel="noopener">Portfolio</a>
+          ·
+          <a href="https://github.com/camilachirinocastell" target="_blank" rel="noopener">GitHub</a>
+          ·
+          <a href="https://linkedin.com/in/camila-chirino-castell" target="_blank" rel="noopener">LinkedIn</a>
+        </p>
+        <p class="footer-tagline">A project for the Front End Development career — ADA ITW</p>
+      </footer>
+    </div>
 
-      <section class="pagination-controls">
-        <button id="first-page-btn">First</button>
-        <button id="prev-page-btn">Previous</button>
-        <!-- Texto de arranque provisorio ("Page 1 of 1"): JS lo
-             actualiza en cada render vía updatePaginationControls(). -->
-        <span id="page-info">Page 1 of 1</span>
-        <button id="next-page-btn">Next</button>
-        <button id="last-page-btn">Last</button>
-      </section>
-    </main>
-
-    <!-- El modal vive fuera de <main> a propósito: no es "contenido
-         principal" de la página, es una capa que se superpone a todo. -->
+    <!-- El modal vive fuera de page-shell a propósito: no es parte del
+         layout de la página, es una capa que se superpone a todo. -->
     <!-- class="hidden" es el estado inicial "cerrado" (ver .hidden en
          _base.scss). openModal()/closeModal() en dom.js agregan y sacan
          esta clase para mostrar u ocultar el modal. -->

@@ -17,10 +17,36 @@ const genderToggle = document.getElementById("gender-toggle");
 const sortSelect = document.getElementById("sort-select");
 const publisherSelect = document.getElementById("publisher-select");
 const alignmentSelect = document.getElementById("alignment-select");
-const firstBtn = document.getElementById("first-page-btn");
-const prevBtn = document.getElementById("prev-page-btn");
-const nextBtn = document.getElementById("next-page-btn");
-const lastBtn = document.getElementById("last-page-btn");
+
+const resultsArea = document.querySelector(".results-area");
+
+// Delegación de eventos: un solo listener cubre los 4 botones de
+// paginación en los DOS bloques (arriba y abajo del grid) — mismo
+// patrón que ya usás en heroesContainer para las cards, en vez de 8
+// listeners individuales (uno por botón por bloque). El atributo
+// data-action del HTML dice qué acción corresponde, sin necesitar un
+// id único por botón.
+resultsArea.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+
+  switch (button.dataset.action) {
+    case "first":
+      currentPage = 1;
+      break;
+    case "prev":
+      currentPage--;
+      break;
+    case "next":
+      currentPage++;
+      break;
+    case "last":
+      currentPage = getTotalPages(getVisibleHeroes());
+      break;
+  }
+
+  updateView();
+});
 
 /****************** ESTADO ********************/
 let allHeroes = [];
@@ -104,26 +130,6 @@ publisherSelect.addEventListener("change", (event) => {
 alignmentSelect.addEventListener("change", (event) => {
   alignmentFilter = event.target.value;
   currentPage = 1;
-  updateView();
-});
-
-firstBtn.addEventListener("click", () => {
-  currentPage = 1;
-  updateView();
-});
-
-prevBtn.addEventListener("click", () => {
-  currentPage--;
-  updateView();
-});
-
-nextBtn.addEventListener("click", () => {
-  currentPage++;
-  updateView();
-});
-
-lastBtn.addEventListener("click", () => {
-  currentPage = getTotalPages(getVisibleHeroes());
   updateView();
 });
 

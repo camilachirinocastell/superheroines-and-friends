@@ -46,6 +46,13 @@
     transform: scale(1.1);
   }
 }
+#heroes-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
 .hero-card {
   cursor: pointer;
   border-radius: 16px;
