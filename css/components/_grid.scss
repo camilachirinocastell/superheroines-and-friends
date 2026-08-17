@@ -1,0 +1,19 @@
+// _grid.scss
+// Acomoda las cards dentro de #heroes-container. Separado de _card.scss
+// a propósito: ese archivo define cómo se ve UNA card, este define cómo
+// se acomodan TODAS juntas — son dos decisiones distintas.
+
+@use "../variables" as *;
+
+#heroes-container {
+  display: grid;
+
+  // auto-fit + minmax: el navegador decide solo cuántas columnas entran
+  // según el ancho disponible (4 en desktop ancho, 2 en una tablet, 1 en
+  // mobile), sin necesidad de fijar un número de columnas por breakpoint.
+  // 220px es el mínimo por card antes de que el navegador prefiera bajar
+  // a menos columnas en vez de achicarlas de más.
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}

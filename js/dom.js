@@ -46,22 +46,29 @@ export function renderCardGrid(heroes) {
 // Función para paginación:
 // Actualiza el texto "Page X of Y" y habilita/deshabilita los 4 botones
 // según si la página actual es la primera y/o la última.
+// Función para paginación:
+// querySelectorAll en vez de getElementById: el bloque de paginación
+// aparece dos veces en el HTML (arriba y abajo del grid), así que hay que
+// actualizar TODAS las instancias de cada botón — getElementById() solo
+// devuelve la primera que encuentra, y el bloque de abajo quedaría
+// siempre desactualizado.
 export function updatePaginationControls(currentPage, totalPages) {
-  const pageInfo = document.getElementById("page-info");
-  const firstBtn = document.getElementById("first-page-btn");
-  const prevBtn = document.getElementById("prev-page-btn");
-  const nextBtn = document.getElementById("next-page-btn");
-  const lastBtn = document.getElementById("last-page-btn");
-
-  pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+  const pageInfos = document.querySelectorAll(".page-info");
+  const firstBtns = document.querySelectorAll(".first-page-btn");
+  const prevBtns = document.querySelectorAll(".prev-page-btn");
+  const nextBtns = document.querySelectorAll(".next-page-btn");
+  const lastBtns = document.querySelectorAll(".last-page-btn");
 
   const isFirstPage = currentPage === 1;
   const isLastPage = currentPage === totalPages;
 
-  firstBtn.disabled = isFirstPage;
-  prevBtn.disabled = isFirstPage;
-  nextBtn.disabled = isLastPage;
-  lastBtn.disabled = isLastPage;
+  pageInfos.forEach((el) => {
+    el.textContent = `Page ${currentPage} of ${totalPages}`;
+  });
+  firstBtns.forEach((btn) => (btn.disabled = isFirstPage));
+  prevBtns.forEach((btn) => (btn.disabled = isFirstPage));
+  nextBtns.forEach((btn) => (btn.disabled = isLastPage));
+  lastBtns.forEach((btn) => (btn.disabled = isLastPage));
 }
 
 // Llena el modal con la info de UN héroe puntual y lo muestra.
