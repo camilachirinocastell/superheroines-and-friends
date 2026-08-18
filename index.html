@@ -23,7 +23,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;600&family=Space+Grotesk:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;600&family=Space+Grotesk:wght@400;500&display=swap&family=JetBrains+Mono:wght@400;700"
       rel="stylesheet"
     />
 
@@ -184,7 +184,14 @@
         <div id="modal-content"></div>
       </div>
     </div>
-
+    <div id="terminal-preloader" class="terminal-preloader hidden">
+      <div>
+        <p id="terminal-text" class="terminal-text"></p>
+        <p id="terminal-hint" class="terminal-hint hidden">
+          [ Please press ENTER ]
+        </p>
+      </div>
+    </div>
     <script type="module" src="js/main.js"></script>
   </body>
 </html>

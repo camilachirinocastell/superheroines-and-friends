@@ -5,6 +5,7 @@
 
 import { fetchAllHeroes } from "./api.js";
 import { renderCardGrid, updatePaginationControls, openModal, closeModal, populatePublisherOptions, renderErrorState, renderEmptyState } from "./dom.js";
+import { runTerminalPreloader } from "./preloader.js";
 import { filterHeroesByName } from "./search.js";
 import { applySuperheroinesFilter, applyPublisherFilter, applyAlignmentFilter } from "./filters.js";
 import { sortAlphabetically } from "./sortHeroes.js";
@@ -195,6 +196,9 @@ document.addEventListener("keydown", (event) => {
 /****************** INICIO ********************/
 
 async function initApp() {
+    await runTerminalPreloader(
+    "Superheroines & Friends.\n\nAn interactive hero directory built by Camila Chirino Castell — Full Stack Developer, AI Engineering track.\n\nVanilla JavaScript · REST API consumption · async/await · SCSS architecture · Git flow with feature branches and PRs.\n\nA project for the Front End Development career — ADA ITW."
+  );
   const loader = document.getElementById("loader");
 
   // Promise que se resuelve sola, sin hacer nada, después de 3000ms —

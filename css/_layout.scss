@@ -73,7 +73,8 @@
   padding: 1rem;
   background: $gradient-glossy;
   border-radius: 12px;
-  height: fit-content;
+  height: 100%; // en vez de fit-content: ocupa el alto disponible, no más
+  overflow-y: auto; // scroll propio si el contenido no entra
 }
 
 // Paginación dentro de la sidebar: botones más chicos que en el resto

@@ -2,7 +2,7 @@
 
 An interactive platform to explore the comic book universe by fetching data from a REST API, with a dedicated focus on the visibility of female characters.
 
-🔗 **Live demo:** _coming soon_
+🔗 **Live demo:** (https://superheroines-and-friends.vercel.app/)
 
 ## About the project
 
