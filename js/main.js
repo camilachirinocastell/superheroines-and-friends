@@ -11,6 +11,7 @@ import { applySuperheroinesFilter, applyPublisherFilter, applyAlignmentFilter } 
 import { sortAlphabetically } from "./sortHeroes.js";
 import { getTotalPages, getPageSlice } from "./pagination.js";
 import { debounce } from "./utils.js";
+import { startAudio, toggleAudio } from "./audio.js";
 
 /****************** ELEMENTOS DEL DOM ********************/
 const searchInput = document.getElementById("search-input");
@@ -192,6 +193,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+document.getElementById("audio-toggle").addEventListener("click", toggleAudio);
 
 /****************** INICIO ********************/
 
@@ -199,6 +201,7 @@ async function initApp() {
     await runTerminalPreloader(
     "Superheroines & Friends.\n\nAn interactive hero directory built by Camila Chirino Castell — Full Stack Developer, AI Engineering track.\n\nVanilla JavaScript · REST API consumption · async/await · SCSS architecture · Git flow with feature branches and PRs.\n\nA project for the Front End Development career — ADA ITW."
   );
+  startAudio(); // arranca apenas se confirmó el Enter
   const loader = document.getElementById("loader");
 
   // Promise que se resuelve sola, sin hacer nada, después de 3000ms —
