@@ -1,0 +1,52 @@
+// _terminal.scss
+// Preloader 2: pantalla negra fullscreen con efecto de tipeo tipo
+// terminal — arranca después del tragamonedas, termina con Enter.
+
+@use "../variables" as *;
+
+.terminal-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 2000; // por encima de todo, incluido el modal
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  padding: 2rem;
+
+  &:not(.hidden) {
+    display: flex;
+  }
+}
+
+.terminal-text {
+  font-family: $font-mono;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  color: $white-glossy;
+  max-width: 640px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+
+  // Cursor parpadeante: pseudo-elemento después del texto ya tipeado,
+  // no un carácter agregado a mano al string — así no se mezcla con el
+  // contenido real, y no hay que sacarlo/ponerlo en cada letra tipeada.
+  &::after {
+    content: "|";
+    color: $pink-primary;
+    animation: blink-cursor 0.8s step-end infinite;
+  }
+}
+
+.terminal-hint {
+  font-family: $font-mono;
+  color: $silver;
+  margin-top: 1.5rem;
+  text-align: center;
+  animation: blink-cursor 1.2s step-end infinite;
+}
+
+@keyframes blink-cursor {
+  50% {
+    opacity: 0;
+  }
+}

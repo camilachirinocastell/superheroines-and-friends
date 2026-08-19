@@ -23,7 +23,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;600&family=Space+Grotesk:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;600&family=Space+Grotesk:wght@400;500&display=swap&family=JetBrains+Mono:wght@400;700"
       rel="stylesheet"
     />
 
@@ -42,6 +42,13 @@
           <span class="site-title__sub">&amp; friends</span>
         </h1>
         <p class="site-tagline">All heroes are welcome.</p>
+
+        <!-- loop: la canción dura 1:41, se repite sola en vez de cortarse en
+       silencio. Sin el atributo "controls": no se ve la barra nativa del
+       navegador, el único control visible es el botón custom de abajo. -->
+        <audio id="bg-audio" src="assets/audio/the-magic-tree.mp3" loop></audio>
+
+        <button id="audio-toggle" aria-label="Pause music">🔊</button>
       </header>
 
       <!-- layout-body es la fila horizontal: sidebar de filtros a la
@@ -184,7 +191,14 @@
         <div id="modal-content"></div>
       </div>
     </div>
-
+    <div id="terminal-preloader" class="terminal-preloader hidden">
+      <div>
+        <p id="terminal-text" class="terminal-text"></p>
+        <p id="terminal-hint" class="terminal-hint hidden">
+          [ Please press ENTER ]
+        </p>
+      </div>
+    </div>
     <script type="module" src="js/main.js"></script>
   </body>
 </html>
